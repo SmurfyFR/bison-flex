@@ -1,0 +1,41 @@
+
+BISON="../tools/win_flex_bison-2.5.7/win_bison.exe"
+FLEX="../tools/win_flex_bison-2.5.7/win_flex.exe"
+CC=mingw32-gcc.exe
+CFLAGS=-Wall -g
+LD=mingw32-g++.exe
+
+BUILT_SOURCES=c--.parser.h c--.parser.c c--.scanner.c
+OBJS=c--.parser.o c--.scanner.o ast.o
+BIN=c--.exe
+
+all: $(BIN)
+
+Debug: all
+
+Release: all
+
+%.parser.c %.parser.h: %.bison
+	$(BISON) --defines=$*.parser.h -o$*.parser.c $*.bison
+
+%.scanner.c: %.flex
+	$(FLEX) -o$*.scanner.c $*.flex
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $*.c
+
+$(BIN): $(OBJS)
+	$(LD) $^ -o $@
+
+# Extra dependencies
+c--.scanner.o: c--.parser.h
+ast.o: ast.h
+
+clean:
+	-cmd /c del $(BUILT_SOURCES) $(OBJS) $(BIN)
+
+cleanDebug: clean
+
+cleanRelease: clean
+
+.PRECIOUS: $(BUILT_SOURCES)

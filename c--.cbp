@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="c--" />
+		<Option makefile="Makefile.windows" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="c--" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="c--" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="Makefile.windows" />
+		<Unit filename="ast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ast.h" />
+		<Unit filename="c--.bison">
+			<Option compilerVar="BISON" />
+			<Option compile="1" />
+			<Option weight="20" />
+			<Option compiler="gcc" use="0" buildCommand="$file_dir\..\tools\win_flex_bison-2.5.7\win_bison.exe --defines=$file_dir\$file_name.parser.h -o$file_dir\$file_name.parser.c $file" />
+		</Unit>
+		<Unit filename="c--.flex">
+			<Option compile="1" />
+			<Option weight="20" />
+			<Option compiler="gcc" use="0" buildCommand="$file_dir\..\tools\win_flex_bison-2.5.7\win_flex.exe -o$file_dir\$file_name.scanner.c $file" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
