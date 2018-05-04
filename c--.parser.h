@@ -41,35 +41,41 @@
    enum yytokentype {
      INTEGER = 258,
      LIST = 259,
-     LESS_EQUAL = 260,
-     GREATER_EQUAL = 261,
-     DIFFERENT = 262,
-     EQUALS = 263,
-     IDENTIFIER = 264
+     WHILE = 260,
+     IF = 261,
+     ELSE = 262,
+     LESS_EQUAL = 263,
+     GREATER_EQUAL = 264,
+     DIFFERENT = 265,
+     EQUALS = 266,
+     IDENTIFIER = 267
    };
 #endif
 /* Tokens.  */
 #define INTEGER 258
 #define LIST 259
-#define LESS_EQUAL 260
-#define GREATER_EQUAL 261
-#define DIFFERENT 262
-#define EQUALS 263
-#define IDENTIFIER 264
+#define WHILE 260
+#define IF 261
+#define ELSE 262
+#define LESS_EQUAL 263
+#define GREATER_EQUAL 264
+#define DIFFERENT 265
+#define EQUALS 266
+#define IDENTIFIER 267
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 34 "c--.bison"
+#line 36 "c--.bison"
 {
        int i_val;
        char *s_val;
        struct ast_node *n_val;
 }
 /* Line 1529 of yacc.c.  */
-#line 73 "c--.parser.h"
+#line 79 "c--.parser.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

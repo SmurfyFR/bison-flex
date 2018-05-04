@@ -23,6 +23,8 @@ int eval_list(struct ast_node *node);
 int eval_expression(struct ast_node *node);
 int eval_boolean_expression(struct ast_node *node);
 int eval_assignment(struct ast_node *node);
+int eval_conditionnal(struct ast_node *node);
+int eval_loop(struct ast_node *node);
 
 /* The AST built by yyparse():
    a clean way would be to have it returned by yyparse(), but it is more complicated */
@@ -45,24 +47,29 @@ struct ast_node *the_ast;
    this token is never returned by yylex(), it is used only for AST
 */
 %token LIST
-
-/* Operators declaration with associativity and precedence */
-/* if you add more operators, don't forger to add them here, or you'll get shift/reduce conflicts */
-%right '='
-%left '+' '-'    /* + and - are at the same level of precedence */
-%left '*' '/'    /* * and / are at a higher precedence than + and - */
-%left '<' '>'
+%token WHILE
+%token IF
+%token ELSE
 %token LESS_EQUAL
 %token GREATER_EQUAL
 %token DIFFERENT
 %token EQUALS
+
+/* Operators declaration with associativity and precedence */
+/* if you add more operators, don't forger to add them here, or you'll get shift/reduce conflicts */
+%right '='
+%left IF ELSE
+%left '+' '-'    /* + and - are at the same level of precedence */
+%left '*' '/'    /* * and / are at a higher precedence than + and - */
+%left '<' '>'
+
 
 %token <s_val> IDENTIFIER
 
 /* Type declarations for non-terminals */
 /* if you add more non-terminals, don't forget to declare their type here */
 /* in general, non-terminals are of type n_val, which corresponds to field n_val of the union */
-%type <n_val> program input line expression boolean_expression assignment
+%type <n_val> program input line expression boolean_expression assignment conditionnal loop
 
 %%
 
@@ -77,6 +84,7 @@ input: input line
                     { $$ = NULL; }
 ;
 
+
 line: '\n'
                     { $$ = NULL; }
     | assignment '\n'
@@ -85,6 +93,20 @@ line: '\n'
                     { $$ = $1; }
     | boolean_expression '\n'
                     { $$ = $1; }
+    | loop '\n'
+    | conditionnal '\n'
+;
+
+loop:
+    WHILE boolean_expression '{' input '}'
+        { $$ = ast_node_new(WHILE, $2, NULL, $4); }
+;
+
+conditionnal:
+    IF boolean_expression '{' input '}'
+        { $$ = ast_node_new(IF, $2, $4, NULL); }
+    | IF boolean_expression '{' input '}' ELSE '{' input '}'
+        { $$ = ast_node_new(IF, $2, $4, $8); }
 ;
 
 expression:
@@ -179,6 +201,16 @@ int ast_eval(struct ast_node *node)
           return eval_assignment(node);
           break;
 
+        // Loops
+        case WHILE:
+          return eval_loop(node);
+          break;
+
+        // Conditionals
+        case IF:
+          return eval_conditionnal(node);
+          break;
+
         default:
             fprintf(stderr, "ast_eval - unknown token (id: %d)\n", node->token);
             break;
@@ -250,11 +282,49 @@ int eval_boolean_expression(struct ast_node *node) {
 
     return 0;
 }
+
 int eval_assignment(struct ast_node *node) {
+    if(node == NULL) {
+      return 0;
+    }
+
     char* name = ast_node_get_str(node->left);
     int value = ast_eval(node->right);
 
     var_put(name, value);
+
+    return 0;
+}
+
+int eval_loop(struct ast_node *node) {
+  if(node == NULL) {
+      return 0;
+  }
+
+  // Partie gauche : Condition à évaluer
+  // Partie droite : Instructions
+  while(eval_boolean_expression(node->left)) {
+      ast_eval(node->right);
+  }
+
+  return 0;
+}
+
+int eval_conditionnal(struct ast_node *node) {
+    if(node == NULL) {
+      return 0;
+    }
+
+    // On a dans la partie gauche la condition,
+    // au milieu les instructions dans le cas ou la condition est évaluée à TRUE
+    // à droite les instructions dans le cas contraire
+    // Dans le cas d'un if condition { block } (sans else), la partie de droite est NULL
+    // Le cas est déjà géré par ast_eval (si node == NULL ...)
+    if(eval_boolean_expression(node->left)) {
+        ast_eval(node->middle);
+    } else {
+        ast_eval(node->right);
+    }
 
     return 0;
 }

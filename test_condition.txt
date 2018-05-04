@@ -1,0 +1,11 @@
+y = 5
+output = 1
+
+if y < 10 {
+    if y >= 5 {
+        output = 3
+    } else {
+        output = 5
+    }
+}
+output

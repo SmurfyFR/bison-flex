@@ -15,6 +15,9 @@ identifier    [a-zA-Z][a-zA-Z0-9]*
 
 %%
 
+"while"       { return WHILE; }
+"if"          { return IF; }
+"else"        { return ELSE; }
 {integer}     { yylval.i_val = atoi(yytext); return INTEGER; }
 {identifier}  { yylval.s_val = strdup(yytext); return IDENTIFIER; }
 "+"           { return yytext[0]; }
@@ -23,6 +26,8 @@ identifier    [a-zA-Z][a-zA-Z0-9]*
 "/"           { return yytext[0]; }
 "("           { return yytext[0]; }
 ")"           { return yytext[0]; }
+"{"           { return yytext[0]; }
+"}"           { return yytext[0]; }
 "="           { return yytext[0]; }
 
 "<"           { return yytext[0]; }

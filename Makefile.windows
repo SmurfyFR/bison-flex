@@ -6,7 +6,7 @@ CFLAGS=-Wall -g
 LD=mingw32-g++.exe
 
 BUILT_SOURCES=c--.parser.h c--.parser.c c--.scanner.c
-OBJS=c--.parser.o c--.scanner.o ast.o
+OBJS=c--.parser.o c--.scanner.o ast.o symtab.o
 BIN=c--.exe
 
 all: $(BIN)

@@ -1,5 +1,16 @@
-Personnes :
-Sabri M'BARKI
-Thomas CARDONNE
+# Construire un compilateur ou un interpréteur avec Bison et Flex
+
+Membres du projet :
+- Sabri M'BARKI
+- Thomas CARDONNE
 
 Fichiers de test :
+- test_condition.txt contient un test de structure if/else imbriquées (Résultat attendu : output = 3)
+- test_loop.txt contient deux tests :
+        - Le premier itère de 0 à 10 (attendu : output = 10)
+        - Le second calcule la factorielle de 10 (résultat attendu : f = 3628800)
+
+Développé et testé sur OSX
+
+Compilation et exécution :
+make && ./c--
