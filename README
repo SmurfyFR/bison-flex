@@ -14,3 +14,21 @@ Développé et testé sur OSX
 
 Compilation et exécution :
 make && ./c--
+
+
+
+Questions ---
+
+>> Pourquoi faut-il copier le texte du lexème?
+>> identifier    [a-zA-Z][a-zA-Z0-9]*
+>> ...
+>> {identifier}  { yylval.s_val = strdup(yytext); return IDENTIFIER; }
+
+On utilise la fonction strdup pour effectuer une copie complète de la chaine yytext et non une copie par référence qui pourrait causer un comportement non attendu / une erreur de segmentation.
+
+>> On notera que les instructions sont dans un ordre inverse de l'entrée, ce qui semble contre-intuitif.
+>> Comment expliquez-vous ceci?
+La construction de l'arbre est telle que chaque instruction est convertie en LIST.
+Le sous-arbre de racine LIST correspondant à cette instruction sera ensuite accroché comme enfant (à gauche), de la LIST de la seconde instruction.
+
+Prenant en compte ce détail, lors de l'évaluation d'un AST, il est nécessaire d'évaluer récursivement le côté gauche puis le côté droit.
